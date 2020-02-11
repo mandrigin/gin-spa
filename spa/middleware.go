@@ -18,9 +18,7 @@ func Middleware(urlPrefix, spaDirectory string) gin.HandlerFunc {
 			fileserver.ServeHTTP(c.Writer, c.Request)
 			c.Abort()
 		} else {
-			c.Request.URL.Path = "/"
-			fileserver.ServeHTTP(c.Writer, c.Request)
-			c.Abort()
+			c.Redirect(http.StatusTemporaryRedirect, "/")
 		}
 	}
 }
