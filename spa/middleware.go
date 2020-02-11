@@ -8,12 +8,13 @@ import (
 )
 
 func Middleware(urlPrefix, spaDirectory string) gin.HandlerFunc {
-	fileserver := http.FileServer(static.LocalFile("./frontend/build", true))
+	directory := static.LocalFile(spaDirectory, true)
+	fileserver := http.FileServer(directory)
 	if urlPrefix != "" {
 		fileserver = http.StripPrefix(urlPrefix, fileserver)
 	}
 	return func(c *gin.Context) {
-		if fs.Exists(urlPrefix, c.Request.URL.Path) {
+		if directory.Exists(urlPrefix, c.Request.URL.Path) {
 			fileserver.ServeHTTP(c.Writer, c.Request)
 			c.Abort()
 		} else {
